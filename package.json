@@ -2,6 +2,7 @@
   "name": "senior-days-quiz",
   "version": "1.0.0",
   "description": "Simple quiz game application for Senior Days 2017",
+  "repository": "https://github.com/oleville/senior-days-trivia",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -11,6 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "express": "^4.15.2",
-    "pug": "^2.0.0-rc.1"
+    "pug": "^2.0.0-rc.1",
+    "sqlite3": "^3.1.8"
   }
 }
