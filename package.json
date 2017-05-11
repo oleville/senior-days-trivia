@@ -1,0 +1,14 @@
+{
+  "name": "senior-days-quiz",
+  "version": "1.0.0",
+  "description": "Simple quiz game application for Senior Days 2017",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Elijah Verdoorn",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.15.2"
+  }
+}
