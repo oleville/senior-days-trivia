@@ -3,7 +3,7 @@ html
 		title= title
 
 	body
-		form(method='POST' action='/register')
+		form#teamName(method='POST' action='/register')
 			div.form-group
 				label(for='name') Name:
 				input#name.form-control(type='text', placeholder='Enter Team Name Here' name='teamName')
