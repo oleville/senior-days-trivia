@@ -2,7 +2,6 @@
 -- Create tables for Senior Days Quiz Game
 -- Elijah Verdoorn, May 2017
 
-CREATE TABLE teams (id integer primary key, name varchar);
-CREATE TABLE question (id integer primary key, text varchar, answer varchar, catagory_id integer);
-CREATE TABLE category (id integer primary key, text varchar);
-
+CREATE TABLE teams (id INTEGER PRIMARY KEY ASC, name VARCHAR NOT NULL);
+CREATE TABLE question (id INTEGER PRIMARY KEY ASC, text VARCHAR, answer VARCHAR, catagory_id INTEGER);
+CREATE TABLE category (id INTEGER PRIMARY KEY ASC, text VARCHAR);
