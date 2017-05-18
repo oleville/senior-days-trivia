@@ -9,16 +9,20 @@ CREATE TABLE teams (
 
 CREATE TABLE question (
 	id INTEGER PRIMARY KEY ASC,
+	category_id INTEGER,
 	text VARCHAR,
-	catagory_id INTEGER
+	FOREIGN KEY(category_id) REFERENCES category(id)
 );
 
-CREATE TABLE category (id INTEGER PRIMARY KEY ASC,
+CREATE TABLE category (
+	id INTEGER PRIMARY KEY ASC,
 	text VARCHAR
 );
 
-CREATE TABLE choices (id INNTEGER PRIMARY KEY ASC,
-	FOREIGN KEY(question_id) REFERENCES question(id),
+CREATE TABLE choices (
+	id INNTEGER PRIMARY KEY ASC,
+	question_id INTEGER,
 	text VARCHAR,
-	correct BOOLEAN
+	correct INTEGER,
+	FOREIGN KEY(question_id) REFERENCES question(id)
 );

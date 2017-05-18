@@ -6,14 +6,21 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"
+    "start": "babel-node index.js --presets env"
   },
   "author": "Elijah Verdoorn",
   "license": "MIT",
   "dependencies": {
+    "bluebird": "^3.5.0",
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
     "pug": "^2.0.0-rc.1",
+    "sqlite": "^2.7.0",
     "sqlite3": "^3.1.8"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.24.1",
+    "babel-preset-env": "^1.4.0",
+    "babel-preset-es2017": "^6.24.1"
   }
 }
