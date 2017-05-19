@@ -3,13 +3,12 @@ html
 
 	body
 		table
-			tbody
-				tr
-					td
-						Question
-					td
-						Answer
 			each answer in answers
 				tr
 					td=answer.question
-					td=answer.choice
+					td
+						if answer.correct
+							b
+								| #{answer.choice}
+						else
+							| #{answer.choice}
