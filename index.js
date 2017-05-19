@@ -15,13 +15,10 @@ app.get('/', (req, res) => {
 	res.render('index', {title: 'Senior Days 2017', message: 'Testing'})
 })
 
-app.get('/questions', async (req, res, next) => {
+app.get('/answers', async (req, res, next) => {
 	try {
-		let [questions, answers] = await Promise.all([
-			db.get('select * from question'),
-			db.get('select * from choices')
-		])
-		console.log(questions, answers)
+		let a = await db.all('SELECT * FROM choice c, question q WHERE q.id = c.question_id;')
+		res.render('answers', {answers: a})
 	} catch (err) {
 		next(err)
 	}

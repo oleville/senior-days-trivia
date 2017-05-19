@@ -10,7 +10,7 @@ CREATE TABLE teams (
 CREATE TABLE question (
 	id INTEGER PRIMARY KEY ASC,
 	category_id INTEGER,
-	text VARCHAR,
+	question VARCHAR,
 	FOREIGN KEY(category_id) REFERENCES category(id)
 );
 
@@ -19,10 +19,10 @@ CREATE TABLE category (
 	text VARCHAR
 );
 
-CREATE TABLE choices (
-	id INNTEGER PRIMARY KEY ASC,
+CREATE TABLE choice (
+	id INTEGER PRIMARY KEY ASC,
 	question_id INTEGER,
-	text VARCHAR,
+	choice VARCHAR,
 	correct INTEGER,
 	FOREIGN KEY(question_id) REFERENCES question(id)
 );
