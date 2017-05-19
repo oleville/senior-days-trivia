@@ -4,7 +4,8 @@
 
 CREATE TABLE teams (
 	id INTEGER PRIMARY KEY ASC,
-	name VARCHAR NOT NULL
+	name VARCHAR NOT NULL,
+	points INTEGER
 );
 
 CREATE TABLE question (

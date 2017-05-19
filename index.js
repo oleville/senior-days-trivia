@@ -20,6 +20,7 @@ app.get('/answers', async (req, res, next) => {
 		let a = await db.all('SELECT * FROM choice c, question q WHERE q.id = c.question_id;')
 		res.render('answers', {answers: a})
 	} catch (err) {
+		console.error(err)
 		next(err)
 	}
 })
@@ -34,15 +35,14 @@ app.post('/register', (req, res) => {
 	res.sendStatus(200) // tell the browser that we got it
 })
 
-app.get('/db', (req, res) => {
-	console.log('db request')
-	// testing the db
-	db.serialize(() => {
-		db.each('SELECT * FROM teams', (err, row) => {
-			console.log('Team name: ' + row.name)
-		})
-	})
-	res.send('ran query')
+app.get('/teams', async (req, res, next) => {
+	try {
+		let t = await db.all('SELECT * from teams;')
+		res.render('teams', {teams: t})
+	} catch (err) {
+		console.error(err)
+		next(err)
+	}
 })
 
 // properly close db connection
