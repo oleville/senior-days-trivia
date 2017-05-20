@@ -11,16 +11,42 @@ app.set('view engine', 'pug')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
-let questionsUsed = []
+let currentQuestion = {};
+
+// function to get a random question and its answers from the database
+let getNextQuestion = async () => {
+	let q = await db.all('SELECT * from question WHERE used = 0;')
+	q = q[getRandomIntInclusive(0, q.length - 1)] // select a question
+	let c = await db.all('SELECT * from choice WHERE question_id = $id ORDER BY random();', {
+		$id: q.id
+	})
+	db.run('UPDATE question SET used = 1 WHERE id = ?;', q.id)
+	return {question: q, answers: c}
+}
+
+let getRandomIntInclusive = (min, max) => {
+	min = Math.ceil(min)
+	max = Math.floor(max)
+	return Math.floor(Math.random() * (max - min + 1)) + min
+}
 
 app.get('/', (req, res) => {
 	res.render('index', {title: 'Senior Days 2017', message: 'Testing'})
 })
 
-let getRandomIntInclusive = (min, max) => {
-	  min = Math.ceil(min);
-	    max = Math.floor(max);
-	      return Math.floor(Math.random() * (max - min + 1)) + min;
+// some sort of admin panel that manages the advancing of the questions, gives score updates, etc
+app.post('/admin', async (req, res, next) => {
+	switch (req.body.command) {
+		case 'nextQuestion':
+			currentQuestion = getNextQuestion()
+			res.sendStatus(200); // send 'ok'
+			break;
+		default:
+	}
+}
+
+app.get('/admin', async (req, res, next) => {
+	res.render('admin')
 }
 
 app.get('/answers', async (req, res, next) => {
@@ -40,6 +66,7 @@ app.post('/register', (req, res) => {
 		insertQuery.finalize()
 		console.log('Inserted team: ' + req.body.teamName)
 	})
+
 	res.sendStatus(200) // tell the browser that we got it
 })
 
@@ -53,15 +80,22 @@ app.get('/teams', async (req, res, next) => {
 	}
 })
 
+// this should just display the current question, let the admin panel advance the question - ensure that multiple users get the same question
 app.get('/question', async (req, res, next) => {
 	try {
-		let q = await db.all('SELECT * from question WHERE used = 0;')
-		q = q[getRandomIntInclusive(0, q.length - 1)] // select a question
-		let c = await db.all('SELECT * from choice WHERE question_id = $id ORDER BY random();', {
-			$id: q.id
-		})
-		db.run('UPDATE question SET used = 1 WHERE id = ?;', q.id)
-		res.render('question', {question: q, answers: c});
+		res.render('question', currentQuestion);
+	} catch (err) {
+		console.error(err)
+		next(err)
+	}
+})
+
+// get the team's response to the questions - this responds with a screen telling them if they are right or not
+app.post('/question', async (req, res, next) => {
+	try {
+		let teamId = req.cookies.teamId;
+		let answer = req.body.answerId;
+		res.render('question-result', {correct: (answer == correctAnswer)})
 	} catch (err) {
 		console.error(err)
 		next(err)
