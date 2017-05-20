@@ -80,7 +80,7 @@ app.post('/register', async (req, res) => {
 
 	console.log('sending cookie' + teamId.id)
 	res.cookie('teamId', teamId.id)
-	res.sendStatus(200) // tell the browser that we got it
+	res.redirect('/question')
 })
 
 // show a list of all the teams
@@ -142,5 +142,4 @@ process.on('exit', () => {
 Promise.resolve().then(() => db.open('./db/database.db', {Promise}))
 		.catch(err => console.error(err.stack))
 		.finally(() => app.listen(3000))
-
 
