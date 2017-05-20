@@ -2,6 +2,7 @@ import express from 'express'
 import db from 'sqlite'
 import bodyParser from 'body-parser'
 import Promise from 'bluebird'
+import cookieParser from 'cookie-parser'
 
 // Start Express
 const app = express()
@@ -11,7 +12,10 @@ app.set('view engine', 'pug')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
-let currentQuestion = {};
+// init the cookie parser
+app.use(cookieParser())
+
+let currentQuestion = {}; // store information about the current question so we don't have to keep asking the database for the information
 
 // function to get a random question and its answers from the database
 let getNextQuestion = async () => {
@@ -24,12 +28,14 @@ let getNextQuestion = async () => {
 	return {question: q, answers: c}
 }
 
+// return a random integer in the range [min, max]
 let getRandomIntInclusive = (min, max) => {
 	min = Math.ceil(min)
 	max = Math.floor(max)
 	return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
+// get the main page
 app.get('/', (req, res) => {
 	res.render('index', {title: 'Senior Days 2017', message: 'Testing'})
 })
@@ -38,17 +44,20 @@ app.get('/', (req, res) => {
 app.post('/admin', async (req, res, next) => {
 	switch (req.body.command) {
 		case 'nextQuestion':
-			currentQuestion = getNextQuestion()
+			currentQuestion = await getNextQuestion()
+			currentQuestion.teamsAnswered = [] // reset the teams that have answered this question, since this is a new question
 			res.sendStatus(200); // send 'ok'
 			break;
 		default:
 	}
 }
 
+// render the admin panel
 app.get('/admin', async (req, res, next) => {
 	res.render('admin')
 }
 
+// get all the answers from the database
 app.get('/answers', async (req, res, next) => {
 	try {
 		let a = await db.all('SELECT * FROM choice c, question q WHERE q.id = c.question_id;')
@@ -59,6 +68,7 @@ app.get('/answers', async (req, res, next) => {
 	}
 })
 
+// register a new team
 app.post('/register', (req, res) => {
 	db.serialize(() => {
 		let insertQuery = db.prepare('INSERT INTO teams (name) VALUES (?);')
@@ -70,6 +80,7 @@ app.post('/register', (req, res) => {
 	res.sendStatus(200) // tell the browser that we got it
 })
 
+// show a list of all the teams
 app.get('/teams', async (req, res, next) => {
 	try {
 		let t = await db.all('SELECT * from teams;')
@@ -95,7 +106,23 @@ app.post('/question', async (req, res, next) => {
 	try {
 		let teamId = req.cookies.teamId;
 		let answer = req.body.answerId;
-		res.render('question-result', {correct: (answer == correctAnswer)})
+		let correct = (answer == correctAnswer)
+
+		if (currentQuestion.teamsAnswered.includes(teamId)) { // this team has already answered
+			res.render('question-result', {correct: false, answered: true})
+			return
+		} else {
+			currentQuestion.teamsAnswered.push(teamId)
+
+			if (correct) {
+				db.run('UPDATE team SET points = (SELECT points FROM team WHERE id = $teamId) + $thisQuestionPoints WHERE id = $teamId', {
+					$teamId = teamId,
+					$thisQuestionPoints = currentQuestion.points
+				})
+			}
+
+			res.render('question-result', {answered: false, correct: correct})
+		}
 	} catch (err) {
 		console.error(err)
 		next(err)

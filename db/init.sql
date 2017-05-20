@@ -13,6 +13,7 @@ CREATE TABLE question (
 	category_id INTEGER,
 	question VARCHAR,
 	used INTEGER,
+	points INTEGER,
 	FOREIGN KEY(category_id) REFERENCES category(id)
 );
 
