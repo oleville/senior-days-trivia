@@ -12,6 +12,7 @@ CREATE TABLE question (
 	id INTEGER PRIMARY KEY ASC,
 	category_id INTEGER,
 	question VARCHAR,
+	used INTEGER,
 	FOREIGN KEY(category_id) REFERENCES category(id)
 );
 

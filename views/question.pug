@@ -1,0 +1,10 @@
+html
+	head
+
+	body
+		p=question.question
+		i
+			| #{question.category}
+		ol
+			each answer in answers
+				li=answer.choice

@@ -11,9 +11,17 @@ app.set('view engine', 'pug')
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: true}))
 
+let questionsUsed = []
+
 app.get('/', (req, res) => {
 	res.render('index', {title: 'Senior Days 2017', message: 'Testing'})
 })
+
+let getRandomIntInclusive = (min, max) => {
+	  min = Math.ceil(min);
+	    max = Math.floor(max);
+	      return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 
 app.get('/answers', async (req, res, next) => {
 	try {
@@ -39,6 +47,21 @@ app.get('/teams', async (req, res, next) => {
 	try {
 		let t = await db.all('SELECT * from teams;')
 		res.render('teams', {teams: t})
+	} catch (err) {
+		console.error(err)
+		next(err)
+	}
+})
+
+app.get('/question', async (req, res, next) => {
+	try {
+		let q = await db.all('SELECT * from question WHERE used = 0;')
+		q = q[getRandomIntInclusive(0, q.length - 1)] // select a question
+		let c = await db.all('SELECT * from choice WHERE question_id = $id ORDER BY random();', {
+			$id: q.id
+		})
+		db.run('UPDATE question SET used = 1 WHERE id = ?;', q.id)
+		res.render('question', {question: q, answers: c});
 	} catch (err) {
 		console.error(err)
 		next(err)
