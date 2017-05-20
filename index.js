@@ -49,13 +49,14 @@ app.post('/admin', async (req, res, next) => {
 			res.sendStatus(200); // send 'ok'
 			break;
 		default:
+			break;
 	}
-}
+})
 
 // render the admin panel
 app.get('/admin', async (req, res, next) => {
 	res.render('admin')
-}
+})
 
 // get all the answers from the database
 app.get('/answers', async (req, res, next) => {
@@ -69,14 +70,16 @@ app.get('/answers', async (req, res, next) => {
 })
 
 // register a new team
-app.post('/register', (req, res) => {
-	db.serialize(() => {
-		let insertQuery = db.prepare('INSERT INTO teams (name) VALUES (?);')
-		insertQuery.run(req.body.teamName)
-		insertQuery.finalize()
-		console.log('Inserted team: ' + req.body.teamName)
+app.post('/register', async (req, res) => {
+	let insertQuery = await db.run('INSERT INTO teams (name) VALUES (?);', req.body.teamName)
+	console.log('Inserted team: ' + req.body.teamName)
+
+	let teamId = await db.get('SELECT id FROM teams WHERE name = $name', {
+		$name: req.body.teamName
 	})
 
+	console.log('sending cookie' + teamId.id)
+	res.cookie('teamId', teamId.id)
 	res.sendStatus(200) // tell the browser that we got it
 })
 
@@ -116,8 +119,8 @@ app.post('/question', async (req, res, next) => {
 
 			if (correct) {
 				db.run('UPDATE team SET points = (SELECT points FROM team WHERE id = $teamId) + $thisQuestionPoints WHERE id = $teamId', {
-					$teamId = teamId,
-					$thisQuestionPoints = currentQuestion.points
+					$teamId: teamId,
+					$thisQuestionPoints: currentQuestion.points
 				})
 			}
 
