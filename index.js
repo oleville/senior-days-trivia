@@ -17,6 +17,16 @@ app.use(cookieParser())
 
 let currentQuestion = {}; // store information about the current question so we don't have to keep asking the database for the information
 
+// check if the answer that the user gave us is correct
+let checkAnswer = (userAnswer) => {
+	currentQuestion.answers.forEach((ele) => {
+		if (ele.letter == userAnswer) {
+			// this is the one that they chose
+			return ele.correct
+		}
+	})
+}
+
 // function to get a random question and its answers from the database
 let getNextQuestion = async () => {
 	let q = await db.all('SELECT * from question WHERE used = 0;')
@@ -25,7 +35,11 @@ let getNextQuestion = async () => {
 		$id: q.id
 	})
 	db.run('UPDATE question SET used = 1 WHERE id = ?;', q.id)
-	console.log(q)
+	// this is how they'll be displayed on the user's screen, so we need to know the letter. We can't store it in the DB since we're randomizing the order that we get them out
+	c[0].letter = 'a'
+	c[1].letter = 'b'
+	c[2].letter = 'c'
+	c[3].letter = 'd'
 	return {question: q, answers: c}
 }
 
@@ -95,12 +109,17 @@ app.get('/question', async (req, res, next) => {
 	}
 })
 
+// render the answer page to the user's device
+app.get('/answer', (req, res, next) => {
+	res.render('answer')
+})
+
 // get the team's response to the questions - this responds with a screen telling them if they are right or not
 app.post('/answer', async (req, res, next) => {
 	try {
 		let teamId = req.cookies.teamId;
 		let answer = req.body.answerId;
-		let correct = (answer == correctAnswer)
+		let correct = checkAnswer(answer)
 
 		if (currentQuestion.teamsAnswered.includes(teamId)) { // this team has already answered
 			res.render('question-result', {correct: false, answered: true})
