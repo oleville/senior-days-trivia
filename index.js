@@ -25,6 +25,7 @@ let getNextQuestion = async () => {
 		$id: q.id
 	})
 	db.run('UPDATE question SET used = 1 WHERE id = ?;', q.id)
+	console.log(q)
 	return {question: q, answers: c}
 }
 
@@ -44,6 +45,7 @@ app.get('/', (req, res) => {
 app.post('/admin', async (req, res, next) => {
 	switch (req.body.command) {
 		case 'nextQuestion':
+			console.log('advancing question')
 			currentQuestion = await getNextQuestion()
 			currentQuestion.teamsAnswered = [] // reset the teams that have answered this question, since this is a new question
 			res.sendStatus(200); // send 'ok'
@@ -56,17 +58,6 @@ app.post('/admin', async (req, res, next) => {
 // render the admin panel
 app.get('/admin', async (req, res, next) => {
 	res.render('admin')
-})
-
-// get all the answers from the database
-app.get('/answers', async (req, res, next) => {
-	try {
-		let a = await db.all('SELECT * FROM choice c, question q WHERE q.id = c.question_id;')
-		res.render('answers', {answers: a})
-	} catch (err) {
-		console.error(err)
-		next(err)
-	}
 })
 
 // register a new team
@@ -105,7 +96,7 @@ app.get('/question', async (req, res, next) => {
 })
 
 // get the team's response to the questions - this responds with a screen telling them if they are right or not
-app.post('/question', async (req, res, next) => {
+app.post('/answer', async (req, res, next) => {
 	try {
 		let teamId = req.cookies.teamId;
 		let answer = req.body.answerId;

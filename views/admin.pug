@@ -1,7 +1,7 @@
 html
 	head
-
+		script
+			include js/admin.js
 	body
-		form#adminCommands(method='POST' action'/admin')
-			div.form-group
-
+		div.form-group
+			button(type='submit' name='nextQuestion' onClick='nextQuestion()') Next Question
