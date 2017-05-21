@@ -43,9 +43,9 @@ app.get('/', (req, res) => {
 
 // some sort of admin panel that manages the advancing of the questions, gives score updates, etc
 app.post('/admin', async (req, res, next) => {
+	console.log(req)
 	switch (req.body.command) {
 		case 'nextQuestion':
-			console.log('advancing question')
 			currentQuestion = await getNextQuestion()
 			currentQuestion.teamsAnswered = [] // reset the teams that have answered this question, since this is a new question
 			res.sendStatus(200); // send 'ok'
