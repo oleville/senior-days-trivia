@@ -8,10 +8,13 @@ html
 		block scripts
 
 	body
-		block content
+		div.container
+			div.row.cols-sm-12.cols-md-10
+				div.col-md-offset-1
+					block content
 		block footer
-			div.footer
+			footer
 				p.copyright
 					| Senior Days Trivia 2017
 					br
-					| Copyright 2017 Elijah Verdoorn
+					| &copy; 2017 Elijah Verdoorn
