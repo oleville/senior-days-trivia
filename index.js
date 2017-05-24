@@ -46,6 +46,11 @@ let getNextQuestion = async () => {
 	return {question: q, answers: c}
 }
 
+let resetAll = async () => {
+	// reset this session
+	db.run('DELETE FROM teams;')
+}
+
 // return a random integer in the range [min, max]
 let getRandomIntInclusive = (min, max) => {
 	min = Math.ceil(min)
@@ -64,7 +69,11 @@ app.post('/admin', async (req, res, next) => {
 		case 'nextQuestion':
 			currentQuestion = await getNextQuestion()
 			currentQuestion.teamsAnswered = [] // reset the teams that have answered this question, since this is a new question
-			res.sendStatus(200); // send 'ok'
+			res.sendStatus(200) // send 'ok'
+			break;
+		case 'resetSession':
+			resetAll()
+			res.sendStatus(200)
 			break;
 		default:
 			break;
