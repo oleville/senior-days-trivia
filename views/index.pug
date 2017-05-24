@@ -1,12 +1,9 @@
-html
-	head
-		title= title
-
-	body
-		img(src='public/img/logo.png')
-		p.welcome Welcome to Senior Days Triva 2017. Enter your team name below (PG-13, please!), then click register.
-		form#teamName(method='POST' action='/register')
-			div.form-group
-				label(for='name') Name:
-				input#name.form-control(type='text', placeholder='Enter Team Name Here' name='teamName')
-			button(type='submit') Register
+extends layout.pug
+block content
+	img(src='public/img/logo.png')
+	p.welcome Welcome to Senior Days Triva 2017. Enter your team name below (PG-13, please!), then click register.
+	form#teamName(method='POST' action='/register')
+		div.form-group
+			label(for='name') Name:
+			input#name.form-control(type='text', placeholder='Enter Team Name Here' name='teamName')
+		button(type='submit') Register

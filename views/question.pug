@@ -1,7 +1,8 @@
-html
-	head
-
-	body
+extends layout.pug
+block content
+	if typeof question === 'undefined'
+		p No questions yet
+	else
 		p=question.question
 		i
 			| #{question.category}

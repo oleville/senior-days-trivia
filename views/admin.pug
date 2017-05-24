@@ -1,7 +1,7 @@
-html
-	head
-		script
-			include js/admin.js
+extends layout.pug
+block scripts
+	include js/admin.js
+block content
 	body
 		div.form-group
 			button(name='nextQuestion' onClick='nextQuestion()') Next Question

@@ -1,12 +1,11 @@
-html
-	head
-		script
-			include js/answer.js
-	body
-		p.instructions Wait for the questions to be displayed, then click the letter for the answer that you think is right
-		div.form-group
-			button(name='answerA' onClick='submitAnswer(this)') A
-			button(name='answerB' onClick='submitAnswer(this)') B
-			button(name='answerC' onClick='submitAnswer(this)') C
-			button(name='answerD' onClick='submitAnswer(this)') D
+extends layout.pug
+block scripts
+	script(src='js/answer.js')
+block content
+	p.instructions Wait for the questions to be displayed, then click the letter for the answer that you think is right
+	div.form-group
+		button(name='answerA' onClick='submitAnswer(this)') A
+		button(name='answerB' onClick='submitAnswer(this)') B
+		button(name='answerC' onClick='submitAnswer(this)') C
+		button(name='answerD' onClick='submitAnswer(this)') D
 

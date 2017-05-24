@@ -1,4 +1,6 @@
-ol
-	each team in teams
-		li=team.name
-			| (#{team.points})
+extends layout.pug
+block content
+	ol
+		each team in teams
+			li=team.name
+				| (#{team.points})
