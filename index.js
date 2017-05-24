@@ -78,7 +78,7 @@ app.get('/admin', async (req, res, next) => {
 
 // register a new team
 app.post('/register', async (req, res) => {
-	let insertQuery = await db.run('INSERT INTO teams (name, points) VALUES (?, 10);', req.body.teamName)
+	let insertQuery = await db.run('INSERT INTO teams (name, points) VALUES (?, 0);', req.body.teamName)
 	console.log('Inserted team: ' + req.body.teamName)
 
 	let teamId = await db.get('SELECT id FROM teams WHERE name = $name', {
