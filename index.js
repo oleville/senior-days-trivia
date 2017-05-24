@@ -15,6 +15,9 @@ app.use(bodyParser.urlencoded({extended: true}))
 // init the cookie parser
 app.use(cookieParser())
 
+// init the static views for images
+app.use('/public', express.static(__dirname + '/public'))
+
 let currentQuestion = {}; // store information about the current question so we don't have to keep asking the database for the information
 
 // check if the answer that the user gave us is correct
@@ -57,7 +60,6 @@ app.get('/', (req, res) => {
 
 // some sort of admin panel that manages the advancing of the questions, gives score updates, etc
 app.post('/admin', async (req, res, next) => {
-	console.log(req)
 	switch (req.body.command) {
 		case 'nextQuestion':
 			currentQuestion = await getNextQuestion()
@@ -76,7 +78,7 @@ app.get('/admin', async (req, res, next) => {
 
 // register a new team
 app.post('/register', async (req, res) => {
-	let insertQuery = await db.run('INSERT INTO teams (name) VALUES (?);', req.body.teamName)
+	let insertQuery = await db.run('INSERT INTO teams (name, points) VALUES (?, 10);', req.body.teamName)
 	console.log('Inserted team: ' + req.body.teamName)
 
 	let teamId = await db.get('SELECT id FROM teams WHERE name = $name', {
@@ -85,7 +87,7 @@ app.post('/register', async (req, res) => {
 
 	console.log('sending cookie' + teamId.id)
 	res.cookie('teamId', teamId.id)
-	res.redirect('/question')
+	res.redirect('/answer')
 })
 
 // show a list of all the teams
@@ -117,11 +119,13 @@ app.get('/answer', (req, res, next) => {
 // get the team's response to the questions - this responds with a screen telling them if they are right or not
 app.post('/answer', async (req, res, next) => {
 	try {
+		console.log('got an answer')
 		let teamId = req.cookies.teamId;
 		let answer = req.body.answerId;
 		let correct = checkAnswer(answer)
 
 		if (currentQuestion.teamsAnswered.includes(teamId)) { // this team has already answered
+			console.log('already answered')
 			res.render('question-result', {correct: false, answered: true})
 			return
 		} else {
