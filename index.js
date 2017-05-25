@@ -3,6 +3,7 @@ import db from 'sqlite'
 import bodyParser from 'body-parser'
 import Promise from 'bluebird'
 import cookieParser from 'cookie-parser'
+import passport from 'passport'
 
 // Start Express
 const app = express()
@@ -17,6 +18,24 @@ app.use(cookieParser())
 
 // init the static views for images
 app.use('/public', express.static(__dirname + '/public'))
+
+// init the login system
+app.use(passport.initialize())
+passport.use(new LocalStrategy((username, password, done) => {
+	User.findOne({username: username}, (err, user) => {
+		if (err) {
+			return done(err)
+		}
+		if (!user) {
+			return done(null, false)
+		}
+		if (!user.verifyPassword(password)) {
+			return done(null, false)
+		}
+		return done(null, user)
+	})
+}))
+// app.use(passport.session())
 
 let currentQuestion = {}; // store information about the current question so we don't have to keep asking the database for the information
 
@@ -48,9 +67,15 @@ let getNextQuestion = async () => {
 
 let resetAll = async () => {
 	// reset this session
-	db.run('DELETE FROM teams;')
-	db.run('UPDATE question SET used = 0;')
+	console.log('resetting session')
+	await db.run('DELETE FROM teams;')
+	await db.run('UPDATE question SET used = 0;')
 }
+
+// return the login page
+app.get('/login', (req, res) => {
+	res.render('login')
+})
 
 // return a random integer in the range [min, max]
 let getRandomIntInclusive = (min, max) => {
@@ -62,6 +87,14 @@ let getRandomIntInclusive = (min, max) => {
 // get the main page
 app.get('/', (req, res) => {
 	res.render('index', {title: 'Senior Days 2017', message: 'Testing'})
+})
+
+// log the user in
+app.post('/login', async (req, res, next) => {
+	passport.authenticate('local', {failureRedirect: '/login'}),
+	(req, res) => {
+		res.redirect('/admin')
+	}
 })
 
 // some sort of admin panel that manages the advancing of the questions, gives score updates, etc

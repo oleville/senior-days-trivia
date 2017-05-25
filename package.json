@@ -16,6 +16,8 @@
     "cookie-parser": "^1.4.3",
     "express": "^4.15.2",
     "mini.css": "^2.2.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
     "pug": "^2.0.0-rc.1",
     "sqlite": "^2.7.0",
     "sqlite3": "^3.1.8"
