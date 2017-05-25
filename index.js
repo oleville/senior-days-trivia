@@ -73,7 +73,7 @@ app.post('/admin', async (req, res, next) => {
 			res.sendStatus(200) // send 'ok'
 			break;
 		case 'resetSession':
-			resetAll()
+			await resetAll()
 			res.sendStatus(200)
 			break;
 		default:
