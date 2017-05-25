@@ -49,6 +49,7 @@ let getNextQuestion = async () => {
 let resetAll = async () => {
 	// reset this session
 	db.run('DELETE FROM teams;')
+	db.run('UPDATE question SET used = 0;')
 }
 
 // return a random integer in the range [min, max]
