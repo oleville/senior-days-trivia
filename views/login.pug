@@ -1,0 +1,9 @@
+extends layout.pug
+
+block content
+	p Welcome to Senior Days Trivia. Please log in.
+	form#login(method='POST' action='/login')
+		div.form-group
+			label(for='username') Username:
+			input#username.form-control(type='text', placeholder='Username' name='username')
+		button(type='submit) Login
