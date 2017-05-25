@@ -3,6 +3,10 @@ block scripts
 	script(src='public/scripts/admin.js')
 block content
 	body
+		div.instructions
+			p Welcome to the Senior Days Trivia admin panel.
+				| &nbsp; Click the 'Next Question' button to advance the question.
+				| &nbsp; Click the 'Reset Session' button to delete all the teams and mark all the questions as unused.
 		div.form-group
 			button(name='nextQuestion' onClick='nextQuestion()') Next Question
 			button(name='reset' onClick='reset()') Reset Session
