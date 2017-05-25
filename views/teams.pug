@@ -1,6 +1,7 @@
 extends layout.pug
 block content
+	a(href='/answer') Back to answers
 	ol
 		each team in teams
 			li=team.name
-				| (#{team.points})
+				| &nbsp; (#{team.points})

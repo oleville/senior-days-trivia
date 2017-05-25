@@ -2,10 +2,15 @@ extends layout.pug
 block scripts
 	script(src='/public/scripts/answer.js')
 block content
-	p.instructions Wait for the questions to be displayed, then click the letter for the answer that you think is right
 	div.form-group
-		button(name='answerA' onClick='submitAnswer(this)') A
-		button(name='answerB' onClick='submitAnswer(this)') B
-		button(name='answerC' onClick='submitAnswer(this)') C
-		button(name='answerD' onClick='submitAnswer(this)') D
+		p.instructions Wait for the questions to be displayed, then click the letter for the answer that you think is right
+		a(href='/teams') Leaderboard
+		div.answerButtonGroup
+			button(class='answerButton' name='answerA' onClick='submitAnswer(this)') A
+			br
+			button(class='answerButton' name='answerB' onClick='submitAnswer(this)') B
+			br
+			button(class='answerButton' name='answerC' onClick='submitAnswer(this)') C
+			br
+			button(class='answerButton' name='answerD' onClick='submitAnswer(this)') D
 

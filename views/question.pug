@@ -3,9 +3,10 @@ block content
 	if typeof question === 'undefined'
 		p No questions yet
 	else
-		p=question.question
-		i
-			| #{question.category}
-		ol
-			each answer in answers
-				li=answer.choice
+		h2=question.question
+		div.col-md-offset-1
+			i
+				| #{question.category}
+			ol
+				each answer in answers
+					li(type='A')=answer.choice
