@@ -1,0 +1,25 @@
+.logo {
+	width: 10%;
+	padding-left: 20px;
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+
+.answersBlock {
+	margin-right: 25px;
+}
+
+.answerButton {
+	width: 100%;
+	height: 250px;
+	margin-right: auto;
+	margin-left: auto;
+
+
+}
+
+.answerButtonGroup {
+	margin-right: auto;
+	margin-left: auto;
+	width: 50em;
+}
